@@ -40,8 +40,8 @@
             <tbody>
                 {% for todo in todo_list %}
                     <tr>
-                    <th scope="row"><input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
-  <label class="btn btn-outline-primary" for="btncheck2"></label></th>
+                    <th scope="row"><input type="checkbox" class="btn-check" id={{ todo.id }} autocomplete="off">
+                    <label class="btn btn-outline-primary" for={{ todo.id }}></label></th>
                     <td>{{ todo.title }}</td>
                     <td>{{ todo.created_at }}</td>
                     <td>{{ todo.deadline }}</td>
