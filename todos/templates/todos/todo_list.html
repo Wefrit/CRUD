@@ -11,7 +11,7 @@
 
   <body>
     <!-- Navbar com título-->
-    <nav class="navbar bg-primary mb-4" data-bs-theme="dark">
+    <nav class="navbar bg-dark mb-4" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#"><h1> Lista de Tarefas</h1>
             </a>
@@ -21,8 +21,8 @@
     <!-- Tabela de tarefas -->
      <main class="container">
         <h2>Minhas Tarefas</h2>
-        {% if todos %}
-            <p class="text-success">Você tem {{ todos|length }} tarefas.</p>
+        {% if todo_list %}
+            <p class="text-success">Você tem {{ todo_list|length }} tarefas.</p>
         {% else %}
             <p class="text-danger">Você não tem tarefas.</p>
         {% endif %}
@@ -38,19 +38,20 @@
                 </tr>
             </thead>
             <tbody>
-                {% for todo in todos %}
+                {% for todo in todo_list %}
                     <tr>
-                    <th scope="row"><a href="#" input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off"
-                    {% if todo.finished_at %} checked {% endif %}>
-  <label class="btn btn-outline-primary" for="btncheck2"></label></a></th>
+                    <th scope="row"><input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
+  <label class="btn btn-outline-primary" for="btncheck2"></label></th>
                     <td>{{ todo.title }}</td>
                     <td>{{ todo.created_at }}</td>
                     <td>{{ todo.deadline }}</td>
                     <td>{{ todo.finished_at |default:"-" }}</td>
                     <td>
+                        <a href="#" class="btn btn-primary btn-sm">Concluir</a>
                         <a href="#" class="btn btn-danger btn-sm">Excluir</a>
                     </tr>
                 {% endfor %}
+                <a href="{% url 'todo_create' %}" class="btn btn-dark">Nova Tarefa</a>
             </tbody>
             </table>
 
