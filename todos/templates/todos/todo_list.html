@@ -11,7 +11,7 @@
 
   <body>
     <!-- Navbar com título-->
-    <nav class="navbar bg-dark mb-4" data-bs-theme="dark">
+    <nav class="navbar mb-4" style="background-color: #406077ff;" data-bs-theme="light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#"><h1> Lista de Tarefas</h1>
             </a>
@@ -29,6 +29,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                <th scope="col">Concluir</th>                   
                 <th scope="col">#</th>
                 <th scope="col">Título</th>
                 <th scope="col">Data de Criação</th>
@@ -42,12 +43,13 @@
                     <tr>
                     <th scope="row"><input type="checkbox" class="btn-check" id={{ todo.id }} autocomplete="off">
                     <label class="btn btn-outline-primary" for={{ todo.id }}></label></th>
+                    <td>{{ todo.id }}</td>
                     <td>{{ todo.title }}</td>
                     <td>{{ todo.created_at }}</td>
                     <td>{{ todo.deadline }}</td>
                     <td>{{ todo.finished_at |default:"-" }}</td>
                     <td>
-                        <a href="#" class="btn btn-primary btn-sm">Concluir</a>
+                        <a href="{% url "todo_update" pk=todo.id %}" class="btn btn-secondary btn-sm">Editar</a>
                         <a href="#" class="btn btn-danger btn-sm">Excluir</a>
                     </tr>
                 {% endfor %}
