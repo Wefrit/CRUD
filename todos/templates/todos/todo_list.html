@@ -22,7 +22,25 @@
      <main class="container">
         <h2>Minhas Tarefas</h2>
         {% if todo_list %}
-            <p class="text-success">Você tem {{ todo_list|length }} tarefas.</p>
+            {% if total == 1 %}
+                <p class="text">Você tem 1 tarefa.</p>
+            {% elif total > 1 %}
+                <p class="text">Você tem {{ total }} tarefas.</p>
+            {% endif %}  
+            {% if finalizadas == 0 %}
+                <p class="text-danger">Você ainda não completou nenhuma tarefa.</p>
+            {% elif  finalizadas == total %}
+                <p class="text-success">Todas as tarefas foram finalizadas!</p>
+            {% elif finalizadas == 1 %}
+                <p class="text">{{ finalizadas }} tarefa finalizada.</p>          
+            {% elif finalizadas > 1 %}
+                <p class="text">{{ finalizadas }} tarefas finalizadas.</p>      
+            {% endif %}
+            {% if faltam == 1 %}
+                <p class="text-danger">Falta 1 tarefa.</p>
+            {% elif faltam > 1 %}
+                <p class="text-danger">Faltam {{ faltam }} tarefas.</p> 
+            {% endif %}  
         {% else %}
             <p class="text-danger">Você não tem tarefas.</p>
         {% endif %}
@@ -40,18 +58,72 @@
             </thead>
             <tbody>
                 {% for todo in todo_list %}
-                    <tr>
-                    <th scope="row"><input type="checkbox" class="btn-check" id={{ todo.id }} autocomplete="off">
-                    <label class="btn btn-outline-primary" for={{ todo.id }}></label></th>
+                <tr>
+                    <th scope="row">
+
+                    <!-- Formulário para completar tarefa e marcar o botão-->
+                    <form action="{% url 'todo_complete' pk=todo.pk %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <input
+                            type="checkbox"
+                            class="btn-check"
+                            id="todo-{{ todo.id }}"
+                            onchange="this.form.submit()"
+                            autocomplete="off"
+                            {% if todo.finished_at %}checked disabled{% endif %}
+                        >
+                        <label
+                            class="btn {% if todo.finished_at %}btn-primary{% else %}btn-outline-primary{% endif %}"
+                            for="todo-{{ todo.id }}"
+                        ></label>
+                    </form>
+
+                    <!--Componentes da lista-->    
                     <td>{{ todo.id }}</td>
                     <td>{{ todo.title }}</td>
                     <td>{{ todo.created_at }}</td>
                     <td>{{ todo.deadline }}</td>
                     <td>{{ todo.finished_at |default:"-" }}</td>
                     <td>
-                        <a href="{% url "todo_update" pk=todo.id %}" class="btn btn-secondary btn-sm">Editar</a>
-                        <a href="#" class="btn btn-danger btn-sm">Excluir</a>
-                    </tr>
+                        
+                        <!-- Botão Editar-->
+                        <a href="{% url "todo_update" pk=todo.id %}" class="btn btn-secondary btn-sm {% if todo.finished_at %}disabled{% endif %}">Editar</a>
+
+                        <!-- Botão que abre o modal para excluir-->
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" 
+                        data-bs-target="#modalExcluir{{ todo.id }}">Excluir</button>
+                    </td>
+                </tr>
+
+                    <!-- Modal de confirmação de exclusão -->
+                    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false"  
+                    id="modalExcluir{{ todo.id }}" tabindex="-1" 
+                    aria-labelledby="modalLabel{{ todo.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                        <!-- Cabeçalho -->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel{{ todo.id }}">Confirmar exclusão</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+
+                        <!-- Corpo do modal -->
+                        <div class="modal-body">
+                            Deseja excluir a tarefa <strong>{{ todo.title }}</strong>?
+                        </div>
+
+                        <!-- Rodapé com botões -->  
+                        <div class="modal-footer">
+                            <form method="post" action="{% url 'todo_delete' todo.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Sim</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
                 {% endfor %}
                 <a href="{% url 'todo_create' %}" class="btn btn-dark">Nova Tarefa</a>
             </tbody>

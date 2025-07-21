@@ -6,3 +6,6 @@ class Todo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, blank=False, null=False)
     deadline = models.DateField(blank=False, null=False)
     finished_at = models.DateField(null=True)
+
+    class Meta:
+        ordering = ["deadline"]
