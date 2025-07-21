@@ -49,7 +49,6 @@ Criar uma aplicação web para gerir tarefas do dia a dia com um CRUD completo.
 1. Clone este repositório:
    ```bash
    git clone https://github.com/Wefrit/CRUD
-   cd seu-repo
    ```
 
 2. Crie e ative o ambiente virtual:
@@ -109,4 +108,4 @@ TWTODOS/
 
 ---
 
-⭐ Obrigado por visitar este repositório!
+Criado por Nathan Lopes
